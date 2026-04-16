@@ -14,22 +14,22 @@
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 // ================= WIFI =================
-const char* ssid = "XXXX";
+const char* ssid = "RLV's Phone";
 const char* password = "XXXX";
 
 // ================= GOOGLE =================
 const char* host = "script.google.com";
-String GAS_ID = "AKfycbz0W86cbx3Y4deDnXu97nzanVJWiJOzyQXMNCglKhLessbRJ5sG5UKCbXkhkbPBEUk";
+String GAS_ID = "GAS_ID";
 
 // ================= TWILIO =================
-String accountSID = "SID";
-String authToken  = "TOKEN";
-String fromNumber = "whatsapp:+14155238886";
+String accountSID = "XXXX";
+String authToken  = "XXXX";
+String fromNumber = "whatsapp:+XXXX";
 
 // ================= TEACHER =================
 String teacherUID = "f78860b2";
 
-// ================= TIMING (UNCHANGED AS YOU SAID) =================
+// ================= TIMING  =================
 const unsigned long CLASS_TIME = 30000;
 const unsigned long ONTIME_LIMIT = 5000;
 const unsigned long ROUND2_TIME = 5000;
@@ -53,8 +53,10 @@ struct Student {
 };
 
 Student students[] = {
-  {"675b93b2", "sowmya", "whatsapp:+91XXXXX"},
-  {"b7c864b2", "canteen", "whatsapp:+91XXXX"}
+  {"fec3a7c4", "Chandanika", "whatsapp:+XXXX"},
+  {"82556a30", "Khushboo", "whatsapp:+XXXX"},
+  {"4ef270c4", "Jaswanth", "whatsapp:+XXXX"},
+  {"3e257ec4", "Krishna", "whatsapp:+XXXX"}
 };
 
 const int N = sizeof(students)/sizeof(students[0]);
@@ -291,7 +293,6 @@ void loop(){
       round2End=now+ROUND2_TIME;
       Serial.println("Round2 Start");
     }
-
     return;
   }
 
@@ -299,8 +300,7 @@ void loop(){
   if(findStudent(uid)<0) return;
 
   Record &r=getRec(uid);
-
-  // 🔥 FIXED LOGIC HERE
+  
   if(!round2Started){
     if(!r.r1){
       r.r1=true;
