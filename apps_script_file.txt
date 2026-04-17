@@ -1,0 +1,70 @@
+function doGet(e) {
+
+  if (!e || !e.parameter) {
+    return ContentService.createTextOutput("No parameters");
+  }
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+
+  const name   = e.parameter.name || "Unknown";
+  const uid    = e.parameter.uid  || "NA";
+  const status = e.parameter.status || "NA";
+
+  const now = new Date();
+  const tz  = "Asia/Kolkata";
+
+  const date = Utilities.formatDate(now, tz, "yyyy-MM-dd");
+  const time = Utilities.formatDate(now, tz, "HH:mm:ss");
+
+
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow > 1) {
+    const lastData = sheet.getRange(lastRow, 1, 1, 5).getValues()[0];
+
+    const lastName = lastData[0];
+    const lastUID  = lastData[1];
+    const lastDate = lastData[2];
+    const lastTime = lastData[3];
+
+    // If same student logged in same minute → skip
+    if (lastUID === uid && lastDate === date && lastTime.substring(0,5) === time.substring(0,5)) {
+      return ContentService.createTextOutput("Duplicate Skipped");
+    }
+  }
+
+  
+  let finalStatus = "";
+
+  switch (status) {
+    case "ON_TIME":
+      finalStatus = "Present";
+      break;
+
+    case "LATE":
+      finalStatus = "Late";
+      break;
+
+    case "PROXY":
+      finalStatus = "Proxy Suspected";
+      break;
+
+    case "ABSENT":
+      finalStatus = "Absent";
+      break;
+
+    default:
+      finalStatus = status;
+  }
+
+  // Append row
+  sheet.appendRow([
+    name,
+    uid,
+    date,
+    time,
+    finalStatus
+  ]);
+
+  return ContentService.createTextOutput("Logged");
+}
